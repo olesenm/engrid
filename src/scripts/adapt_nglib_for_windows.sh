@@ -22,17 +22,15 @@
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
 # DESCRIPTION:
-# This script checks out or updates the netgen source code and creates the static netgen library.
+# This script checks out or updates the netgen source code and creates
+# the static netgen library.
 
-
-echo ${0%/*} #directory of script
-echo ${0%/*/*} # parent directory of script
-# exit 0
-cd ${0%/*/*} || exit 1    # run from parent directory of script
+# run from the src/ directory which is the parent of this directory
+cd "${0%/*}/.." || exit 1
 
 package=netgen-mesher
 (
-    echo "Working directory = $(pwd)"
+    echo "Working directory = $PWD"
     cd netgen_svn || exit 1
 
     if [ -d netgen-mesher/.svn ]
@@ -48,8 +46,10 @@ package=netgen-mesher
     echo "adapting nglib.h for static library on windows"
     echo
 
-    sed -i 's/__declspec(dllexport)//' ./netgen-mesher/netgen/nglib/nglib.h
-    sed -i 's/__declspec(dllimport)//' ./netgen-mesher/netgen/nglib/nglib.h
+    sed -i \
+        -e 's/__declspec(dllexport)//' \
+        -e 's/__declspec(dllimport)//' \
+        ./netgen-mesher/netgen/nglib/nglib.h
 )
 
 # ----------------------------------------------------------------- end-of-file

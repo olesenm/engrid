@@ -30,14 +30,14 @@
 # If no, exit
 if [ $# -ne 2 ]
 then
-	echo
-	echo 'archives a git repository as <dir>_$(date +%Y%m%d_%H%M%S).tar.gz'
-	echo "usage :"
-	echo "$0 <GITDIR> <DESTDIR>"
-        echo "GITDIR = directory to archive. Usually 'engrid'"
-        echo "DESTDIR = Where the archive should be placed."
-        echo
-        exit 0
+    echo
+    echo 'archives a git repository as <dir>_$(date +%Y%m%d_%H%M%S).tar.gz'
+    echo "usage :"
+    echo "$0 <GITDIR> <DESTDIR>"
+    echo "GITDIR = directory to archive. Usually 'engrid'"
+    echo "DESTDIR = Where the archive should be placed."
+    echo
+    exit 0
 fi
 
 DIR=$(readlink -f $1)
@@ -51,27 +51,25 @@ ARCHIVE=$DESTDIR/$BASE\_$DATE.tar.gz
 
 # exit 0
 
-cd $DIR
-if [ $? -ne 0 ]
-then
-	echo "ERROR: Could not change directory"
-	exit 2
-fi
+cd $DIR || {
+    echo "ERROR: Could not change directory"
+    exit 2
+}
 
 git status
 if [ $? -eq 128 ]
 then
-	echo "ERROR: No git repository found."
-	exit 2
+    echo "ERROR: No git repository found."
+    exit 2
 fi
 
 if [ $( git status | wc -l ) -ne 2 ]
 then
-	echo "Please commit latest changes before archiving. ;)"
-        echo "If you want to force archival, use:"
-        echo " cd $DIR"
-        echo " git archive --format=tar --prefix=$BASE/ HEAD | gzip >$ARCHIVE"
-	exit 2
+    echo "Please commit latest changes before archiving. ;)"
+    echo "If you want to force archival, use:"
+    echo " cd $DIR"
+    echo " git archive --format=tar --prefix=$BASE/ HEAD | gzip >$ARCHIVE"
+    exit 2
 fi
 
 #hg archive -v -t"tgz" $ARCHIVE
@@ -79,14 +77,16 @@ git archive --format=tar --prefix=$BASE/ HEAD | gzip >$ARCHIVE
 
 if [ $? -eq 0 ]
 then
-	echo "All archived in $ARCHIVE"
-	exit 0
+    echo "All archived in $ARCHIVE"
+    exit 0
 else
-	echo "ERROR: Archiving failed"
-	exit 1
+    echo "ERROR: Archiving failed"
+    exit 1
 fi
 
 cd $ORIG
+
+# ----------------------------------------------------------------- end-of-file
 
 #####################################################
 #deprecated code used when CVS was still used:

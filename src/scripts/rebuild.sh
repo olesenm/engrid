@@ -31,7 +31,7 @@ set -ex
 FAILURE=0
 
 #set up environment
-source ./scripts/setup_paths.sh engits yes
+. ./scripts/setup_paths.sh engits yes
 
 echo "BUILDING TOOLS":
 echo "gcc = $(which gcc)"
@@ -94,3 +94,5 @@ then
 fi
 
 echo "SUCCESS: Everything compiles."
+
+# ----------------------------------------------------------------- end-of-file

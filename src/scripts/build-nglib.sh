@@ -22,15 +22,15 @@
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
 # DESCRIPTION:
-# This script checks out or updates the netgen source code and creates the static netgen library.
+# This script checks out or updates the netgen source code and creates
+# the static netgen library.
 
-# cf parameter expansion in bash manual
-SCRIPTDIR=${0%$(basename $0)}
-cd $SCRIPTDIR/..
+# run from the src/ directory which is the parent of this directory
+cd "${0%/*}/.." || exit 1
 
 package=netgen-mesher
 (
-    echo "Working directory = $(pwd)"
+    echo "Working directory = $PWD"
     cd netgen_svn || exit 1
 
     if [ -d netgen-mesher/.svn ]
@@ -42,17 +42,28 @@ package=netgen-mesher
         svn co https://netgen-mesher.svn.sourceforge.net/svnroot/$package $package
     fi
 
+    if [ "$1" = win ]
+    then
+        echo
+        echo "adapting nglib.h for static library on windows"
+        echo
+        sed -i \
+            -e 's/__declspec(dllexport)//' \
+            -e 's/__declspec(dllimport)//' \
+            ./netgen-mesher/netgen/nglib/nglib.h
+    fi
+
     echo
     echo "starting qmake for $package"
     echo
 
-    qmake
+    qmake || exit 1
 
     echo
     echo "making $package"
     echo
 
-    make
+    make || exit 1
 )
 
 # ----------------------------------------------------------------- end-of-file

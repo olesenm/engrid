@@ -30,7 +30,7 @@ set -e -x -u
 # echo "================"
 # echo "TMPDIR = $TMPDIR"
 # echo "================"
-# 
+#
 # ldd ./engrid > $TMPDIR/ldd.out
 # mkdir $TMPDIR/enGrid
 # #cp engrid $TMPDIR/enGrid
@@ -38,17 +38,17 @@ set -e -x -u
 # tar -czvf enGrid_bin.tar.gz $TMPDIR/enGrid/*
 # # rm -rf enGrid
 # # rm ldd.out
-# 
+#
 # exit 0
 
 # Check if all parameters are present
 # If no, exit
 if [ $# -ne 3 ]
 then
-        echo "usage :"
-        echo "`basename $0` VERSION SRCDIR ARCHITECTURE"
-	echo "You must run this script from SRCDIR/.."
-        exit 0
+    echo "usage :"
+    echo "${0##*/} VERSION SRCDIR ARCHITECTURE"
+    echo "You must run this script from SRCDIR/.."
+    exit 0
 fi
 
 VERSION=$1
@@ -65,34 +65,34 @@ dirname="enGrid_linux"$ARCH"bit_"$VERSION
 
 saferemove()
 {
-	TARGET=$(readlink -f $1)
-	if [ -e $TARGET ]
-	then
-	        echo "$TARGET already exists."
-	        echo "rm -v $TARGET ?(y/n/q)"
-		read ans
-		case $ans in
-		  y|Y|yes) rm -v $TARGET;;
-		  q) exit 0;;
-		  *) echo "proceeding without removing";;
-		esac
-	fi
+    TARGET=$(readlink -f $1)
+    if [ -e $TARGET ]
+    then
+        echo "$TARGET already exists."
+        echo "rm -v $TARGET ?(y/n/q)"
+        read ans
+        case $ans in
+          y|Y|yes) rm -v $TARGET;;
+          q) exit 0;;
+          *) echo "proceeding without removing";;
+        esac
+    fi
 }
 
 saferemove_recursive()
 {
-	TARGET=$(readlink -f $1)
-	if [ -e $TARGET ]
-	then
-	        echo "$TARGET already exists."
-	        echo "rm -rfv $TARGET ?(y/n/q)"
-		read ans
-		case $ans in
-		  y|Y|yes) rm -rfv $TARGET;;
-		  q) exit 0;;
-		  *) echo "proceeding without removing";;
-		esac
-	fi
+    TARGET=$(readlink -f $1)
+    if [ -e $TARGET ]
+    then
+        echo "$TARGET already exists."
+        echo "rm -rfv $TARGET ?(y/n/q)"
+        read ans
+        case $ans in
+          y|Y|yes) rm -rfv $TARGET;;
+          q) exit 0;;
+          *) echo "proceeding without removing";;
+        esac
+    fi
 }
 
 # remove traces from last use
@@ -104,14 +104,14 @@ saferemove $tarname
 
 #if [ -e $TMP ]
 #then
-#        echo "$TMP already exists."
-#        echo "rm -rfv $TMP ?(y/n/q)"
-#	read ans
-#	case $ans in
-#	  y|Y|yes) rm -rfv $TMP;;
-#	  q) exit 0;;
-#	  *) echo "proceeding without removing";;
-#	esac
+#     echo "$TMP already exists."
+#     echo "rm -rfv $TMP ?(y/n/q)"
+#     read ans
+#     case $ans in
+#         y|Y|yes) rm -rfv $TMP;;
+#         q) exit 0;;
+#         *) echo "proceeding without removing";;
+#     esac
 #fi
 
 #mkdir -p $TMP
@@ -170,3 +170,5 @@ mv $gzname ..
 cd ..
 saferemove_recursive tmp
 saferemove $tarname
+
+# ----------------------------------------------------------------- end-of-file

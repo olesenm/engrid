@@ -5,9 +5,9 @@ set -ux
 # If no, exit
 if [ $# -ne 4 ]
 then
-        echo "usage :"
-        echo "`basename $0` INPUT OUTPUT INSTALL UNINSTALL"
-        exit 0
+    echo "usage :"
+    echo "${0##*/} INPUT OUTPUT INSTALL UNINSTALL"
+    exit 0
 fi
 
 INPUT=$1
@@ -53,3 +53,5 @@ cat $INSTALL
 
 echo "=== UNINSTALL ==="
 cat $UNINSTALL
+
+# ----------------------------------------------------------------- end-of-file
