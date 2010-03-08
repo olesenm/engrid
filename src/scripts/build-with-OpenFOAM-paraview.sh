@@ -24,8 +24,6 @@
 # DESCRIPTION:
 # This script compiles engrid with the OpenFOAM paraview libraries.
 
-cd ${0%/*} || exit 1    # run from this directory
-
 usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
@@ -36,29 +34,62 @@ options:
 
 * compile engrid with the OpenFOAM paraview libraries
 
+The engridFoam script (provided with OpenFOAM) can be used to invoke
+engrid with paraview libraries from OpenFOAM ThirdParty
+
 USAGE
     exit 1
 }
 
 #------------------------------------------------------------------------------
 
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
 
-# set the major version "<digits>.<digits>"
-ParaView_MAJOR_VERSION=$(echo $ParaView_VERSION | \
-    sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/')
+# run from the src/ directory which is the parent of this directory
+cd "${0%/*}/.." || exit 1
 
-libdir="$ParaView_DIR/lib/paraview-$ParaView_MAJOR_VERSION"
+#------------------------------------------------------------------------------
 
-[ -d "$ParaView_INST_DIR" ] || usage "ParaView_INST_DIR not found ($ParaView_INST_DIR)"
+# if needed, set MAJOR version to correspond to VERSION
+# ParaView_MAJOR is "<digits>.<digits>" from ParaView_VERSION
+case "${ParaView_VERSION:-unknown}" in
+"${ParaView_MAJOR}.*" )
+    # version and major appear to correspond
+    ;;
+
+*)
+    ParaView_MAJOR=$(echo $ParaView_VERSION | sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/')
+    ;;
+esac
+export ParaView_MAJOR
+
+
+bindir="$ParaView_DIR/bin"
+libdir="$ParaView_DIR/lib/paraview-$ParaView_MAJOR"
+
 [ -d "$ParaView_DIR" ] || usage "ParaView_DIR not found ($ParaView_DIR)"
-
+[ -d $bindir ] || echo "paraview binary not found - could mean something is wrong"
 [ -d $libdir ] || usage "paraview libraries not found"
 
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
 
-qmake engrid.pro.OpenFOAM-paraview
-
-make
-make install
+# report what is happening
+echo "==================================================="
+echo "compile engrid with the OpenFOAM paraview libraries"
+echo "==================================================="
+echo
+set -x
+qmake engrid.pro.OpenFOAM-paraview && make && make install
 
 # ----------------------------------------------------------------- end-of-file
