@@ -20,7 +20,7 @@ LANGUAGE = C++
 TARGET   = engrid
 
 # install
-target.path = ../platforms/$(WM_ARCH)$(WM_COMPILER)
+target.path = ../../platforms/$(WM_ARCH)$(WM_COMPILER)/engrid
 
 INSTALLS += target
 
